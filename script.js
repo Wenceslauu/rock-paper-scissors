@@ -1,3 +1,7 @@
+let result
+let playerScore = 0
+let computerScore = 0
+
 function computerPlay() {
     let randomValue = Math.floor(Math.random() * 3)
     
@@ -11,8 +15,7 @@ function computerPlay() {
     }
 }
 
-function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase()  
+function playRound(playerSelection, computerSelection) { 
 
     if (playerSelection === "rock" &&  computerSelection === "paper") {
         console.log("You lose! Paper beats rock.")
@@ -38,28 +41,34 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-function game() {
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = prompt("Rock, paper or scissors?", "") //Handle wrong player input
-        let computerSelection = computerPlay()
+function updateScores(playerSelection, computerSelection) {
+    result = playRound(playerSelection, computerSelection)
 
-        let result = playRound(playerSelection, computerSelection)
+    const pScore = document.querySelector('.pScore')
+    const cScore = document.querySelector('.cScore')
 
-        let playerScore = 0
-        let computerScore = 0
+    if (result === "win") {
+        playerScore++
+    } else if (result === "loss") {
+        computerScore++
+    }
 
-        if (result === "win") {
-            playerScore++
-        } else if (result === "loss") {
-            computerScore++
-        }
-        
-        console.log(`Player Score: ${playerScore}`)
-        console.log(`Computer Score: ${computerScore}`)
-        console.log("")
+    pScore.textContent = `Player score: ${playerScore}`
+    cScore.textContent = `Computer score: ${computerScore}`
 
-        //Add a timer between the game rounds
+    if (playerScore === 5) {
+        alert("You won!")
+        playerScore = 0
+        computerScore = 0
+    } else if (computerScore === 5) {
+        alert("You lost!")
+        playerScore = 0
+        computerScore = 0
     }
 }
 
-game()
+const btns = document.querySelectorAll('button')
+
+btns.forEach(button => button.addEventListener('click', e => {
+        updateScores(e.target.className, computerPlay())
+}))
